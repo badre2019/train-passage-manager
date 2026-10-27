@@ -40,4 +40,25 @@ class TrainPassageTest {
         assertThat(passage.getDelayMinutes()).isEqualTo(10);
     }
 
+
+    @Test
+    void shouldStartWithScheduledStatus() {
+        TrainPassage passage = new TrainPassage();
+
+        assertThat(passage.getStatus())
+                .isEqualTo(PassageStatus.SCHEDULED);
+    }
+
+
+    @Test
+    void shouldBecomeDelayedWhenPositiveDelayIsReported() {
+        TrainPassage passage = new TrainPassage();
+
+        passage.reportDelay(5);
+
+        assertThat(passage.getStatus())
+                .isEqualTo(PassageStatus.DELAYED);
+    }
+
+
 }
