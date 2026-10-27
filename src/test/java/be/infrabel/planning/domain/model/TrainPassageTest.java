@@ -61,4 +61,45 @@ class TrainPassageTest {
     }
 
 
+    @Test
+    void shouldNotAllowDelayChangesWhenPassageIsCompleted() {
+        TrainPassage passage = new TrainPassage();
+
+        passage.complete();
+
+        assertThatThrownBy(() -> passage.reportDelay(5))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Cannot modify a completed passage");
+    }
+
+
+    @Test
+    void shouldPreserveStateWhenDelayChangeIsRejected() {
+        TrainPassage passage = new TrainPassage();
+        passage.reportDelay(5);
+        passage.complete();
+
+        assertThatThrownBy(() -> passage.reportDelay(10))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Cannot modify a completed passage");
+
+        assertThat(passage.getDelayMinutes()).isEqualTo(5);
+        assertThat(passage.getStatus())
+                .isEqualTo(PassageStatus.COMPLETED);
+    }
+
+
+    @Test
+    void shouldRemainScheduledWhenDelayIsZero() {
+        TrainPassage passage = new TrainPassage();
+
+        passage.reportDelay(0);
+
+        assertThat(passage.getDelayMinutes()).isZero();
+        assertThat(passage.getStatus())
+                .isEqualTo(PassageStatus.SCHEDULED);
+    }
+
+
+
 }
