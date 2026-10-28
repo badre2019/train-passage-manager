@@ -9,7 +9,7 @@ class TrainPassageTest {
     @Test
     void shouldRejectNegativeDelay() {
 
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
         assertThatThrownBy(() ->
                 passage.reportDelay(-5)
         ).isInstanceOf(IllegalArgumentException.class);
@@ -17,14 +17,14 @@ class TrainPassageTest {
 
     @Test
     void shouldAcceptPositiveDelay() {
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
         assertThatCode(() ->
                 passage.reportDelay(5)).doesNotThrowAnyException();
     }
 
     @Test
     void shouldStoreReportedDelay() {
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
 
         passage.reportDelay(5);
         assertThat(passage.getDelayMinutes()).isEqualTo(5);
@@ -32,7 +32,7 @@ class TrainPassageTest {
 
     @Test
     void shouldUpdateDelayWhenNewDelayIsReported() {
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
 
         passage.reportDelay(5);
         passage.reportDelay(10);
@@ -43,7 +43,7 @@ class TrainPassageTest {
 
     @Test
     void shouldStartWithScheduledStatus() {
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
 
         assertThat(passage.getStatus())
                 .isEqualTo(PassageStatus.SCHEDULED);
@@ -52,7 +52,7 @@ class TrainPassageTest {
 
     @Test
     void shouldBecomeDelayedWhenPositiveDelayIsReported() {
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
 
         passage.reportDelay(5);
 
@@ -63,7 +63,7 @@ class TrainPassageTest {
 
     @Test
     void shouldNotAllowDelayChangesWhenPassageIsCompleted() {
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
 
         passage.complete();
 
@@ -75,7 +75,7 @@ class TrainPassageTest {
 
     @Test
     void shouldPreserveStateWhenDelayChangeIsRejected() {
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
         passage.reportDelay(5);
         passage.complete();
 
@@ -91,7 +91,7 @@ class TrainPassageTest {
 
     @Test
     void shouldRemainScheduledWhenDelayIsZero() {
-        TrainPassage passage = new TrainPassage();
+        TrainPassage passage = new TrainPassage(1L);
 
         passage.reportDelay(0);
 
@@ -100,6 +100,13 @@ class TrainPassageTest {
                 .isEqualTo(PassageStatus.SCHEDULED);
     }
 
+    @Test
+    void shouldKeepItsIdentifierWhenCreated() {
+        // Arrange & Act
+        TrainPassage passage = new TrainPassage(1L);
 
+        // Assert
+        assertThat(passage.getId()).isEqualTo(1L);
+    }
 
 }
